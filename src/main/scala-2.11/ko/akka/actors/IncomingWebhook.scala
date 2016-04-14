@@ -17,7 +17,7 @@ import spray.json._
 object IncomingWebhook {
   sealed trait IncomingWebhookMessage
 
-  case class Message(text: String) extends IncomingWebhookMessage
+  case class Message(text: String, username: String = "bot") extends IncomingWebhookMessage
 
 
   def props(url: String) = {
@@ -27,7 +27,7 @@ object IncomingWebhook {
 
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val messageFormat = jsonFormat1(Message)
+  implicit val messageFormat = jsonFormat2(Message)
 }
 
 class IncomingWebhook(url: String) extends Actor with JsonSupport {
