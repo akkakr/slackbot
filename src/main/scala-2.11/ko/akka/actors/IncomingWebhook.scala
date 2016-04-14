@@ -50,7 +50,6 @@ class IncomingWebhook(url: String) extends Actor with JsonSupport {
 
       responseFuture.onSuccess({
         case s => println(s)
-        case _ =>
       })
     }
     case _ => {
@@ -58,4 +57,3 @@ class IncomingWebhook(url: String) extends Actor with JsonSupport {
     }
   }
 }
-
