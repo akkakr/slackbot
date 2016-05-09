@@ -40,9 +40,10 @@ object Application extends App {
       }
     }
 
+  val port = System.getenv("PORT").toInt
+  print(port)
 
-
-  Http().bindAndHandle(route, "0.0.0.0", 8080)
+  Http().bindAndHandle(route, "0.0.0.0", port)
   println(s"Server online at http://0.0.0.0:8080/\nPress RETURN to stop...")
 
 }
