@@ -4,20 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
-//val stage = taskKey[Unit]("Stage task")
-//
-//val Stage = config("stage")
-//
-//stage := {
-//  (packageWar in Compile).value
-//  (update in Stage).value.allFiles.foreach { f =>
-//    if (f.getName.matches("webapp-runner-[0-9\\.]+.jar")) {
-//      println("copying " + f.getName)
-//      IO.copyFile(f, baseDirectory.value / "target" / "webapp-runner.jar")
-//    }
-//  }
-//}
-
+enablePlugins(JavaAppPackaging)
 
 libraryDependencies ++= {
   val akkaVersion = "2.4.3"
@@ -49,8 +36,6 @@ libraryDependencies ++= {
     //"com.typesafe.akka" %% "akka-http-xml-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-persistence-query-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-typed-experimental" % akkaVersion,
-    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-
-    "com.github.nscala-time" %% "nscala-time" % "2.12.0"
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion
   )
 }
