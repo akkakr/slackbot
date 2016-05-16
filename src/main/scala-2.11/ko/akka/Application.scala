@@ -1,11 +1,21 @@
 package ko.akka
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import akka.http.scaladsl.marshalling.ToResponseMarshaller
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
 import akka.stream.ActorMaterializer
+import akka.util.Timeout
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.User
+import com.typesafe.config.ConfigFactory
+import ko.akka.actors.IncomingWebhook
+import ko.akka.actors.IncomingWebhook.Message
 import spray.json.DefaultJsonProtocol
+
+import scala.concurrent.ExecutionContext
+
 //import com.madhukaraphatak.akkahttp.Models.{Customer, ServiceJsonProtoocol}
 
 //import ko.akka.actors.YahooFinance
@@ -15,6 +25,7 @@ import spray.json.DefaultJsonProtocol
   * Created by before30 on 16. 4. 11..
   */
 case class SlackMessage(msg: String)
+case class SlackCommand(user_name: String, text: String)
 
 object ServiceJsonProtoocol extends DefaultJsonProtocol {
   implicit val customerProtocol = jsonFormat1(SlackMessage)
@@ -28,13 +39,33 @@ object Application extends App {
   implicit val materializer = ActorMaterializer()
   // needed for the future map/flatmap in the end
   implicit val executionContext = system.dispatcher
+  val incomingWebhook = system.actorOf(IncomingWebhook.props(ConfigFactory.load().getConfig("app").getString("incoming-slack-url")))
 
+//  val route =
+//    path("bot") {
+//      post {
+//        entity(as[SlackMessage]) {
+//          message => complete {
+//            incomingWebhook ! Message(message.msg)
+//            s"got customer with name ${message.msg}"
+//          }
+//        }
+//      }
+//    }
   val route =
-    path("bot") {
+    path("command") {
       post {
-        entity(as[SlackMessage]) {
-          customer => complete {
-            s"got customer with name ${customer.msg}"
+        formFieldMap { fields =>
+//          def formFieldString(formField: (String, String)): String =
+//            s"""${formField._1} = '${formField._2}'"""
+//          complete(s"The form fields are ${fields.map(formFieldString).mkString(", ")}")
+          complete {
+
+            val user_name = fields.getOrElse("user_name", "")
+            val text = fields.getOrElse("text", "")
+
+            incomingWebhook ! Message(username = user_name , text = text)
+            s"user_name = $user_name\ntext = $text"
           }
         }
       }
@@ -44,6 +75,6 @@ object Application extends App {
   print(port)
 
   Http().bindAndHandle(route, "0.0.0.0", port)
-  println(s"Server online at http://0.0.0.0:8080/\nPress RETURN to stop...")
+  println(s"Server online at http://0.0.0.0:" + port +"/\nPress RETURN to stop...")
 
 }

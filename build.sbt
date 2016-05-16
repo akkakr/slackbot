@@ -30,7 +30,7 @@ libraryDependencies ++= {
     //"com.typesafe.akka" %% "akka-testkit" % akkaVersion,
     //"com.typesafe.akka" %% "akka-distributed-data-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-typed-experimental" % akkaVersion,
-    //"com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-http-jackson-experimental" % akkaVersion,
     "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-http-xml-experimental" % akkaVersion,
