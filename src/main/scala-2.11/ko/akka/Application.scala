@@ -55,7 +55,7 @@ object Application extends App {
             val user_name = fields.getOrElse("user_name", "")
             val text = fields.getOrElse("text", "")
 
-            incomingWebhook ! Message(username = user_name , text = text)
+            incomingWebhook ! Message(text = text)
             s"user_name = $user_name\ntext = $text"
           }
         }
