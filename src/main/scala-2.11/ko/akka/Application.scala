@@ -1,20 +1,13 @@
 package ko.akka
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.http.scaladsl.marshalling.ToResponseMarshaller
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
 import akka.stream.ActorMaterializer
-import akka.util.Timeout
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.User
 import com.typesafe.config.ConfigFactory
 import ko.akka.actors.IncomingWebhook
 import ko.akka.actors.IncomingWebhook.Message
 import spray.json.DefaultJsonProtocol
-
-import scala.concurrent.ExecutionContext
 
 //import com.madhukaraphatak.akkahttp.Models.{Customer, ServiceJsonProtoocol}
 
@@ -32,8 +25,6 @@ object ServiceJsonProtoocol extends DefaultJsonProtocol {
 }
 object Application extends App {
   println("hello world")
-
-  import ServiceJsonProtoocol._
   implicit val system = ActorSystem()
 
   implicit val materializer = ActorMaterializer()
