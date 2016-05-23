@@ -36,6 +36,7 @@ libraryDependencies ++= {
     //"com.typesafe.akka" %% "akka-http-xml-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-persistence-query-experimental" % akkaVersion,
     //"com.typesafe.akka" %% "akka-typed-experimental" % akkaVersion,
-    "com.typesafe.akka" %% "akka-actor" % akkaVersion
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "org.scala-lang" % "scala-reflect" % "2.11.8"
   )
 }

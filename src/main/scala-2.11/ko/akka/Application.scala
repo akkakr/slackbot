@@ -7,6 +7,8 @@ import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import ko.akka.actors.IncomingWebhook
 import ko.akka.actors.IncomingWebhook.Message
+import ko.akka.actors.commands.CommandSupervisor
+import ko.akka.actors.commands.CommandSupervisor.Help
 import spray.json.DefaultJsonProtocol
 
 //import com.madhukaraphatak.akkahttp.Models.{Customer, ServiceJsonProtoocol}
@@ -32,6 +34,8 @@ object Application extends App {
   implicit val executionContext = system.dispatcher
   val incomingWebhook = system.actorOf(IncomingWebhook.props(ConfigFactory.load().getConfig("app").getString("incoming-slack-url")))
 
+  val commandActor = system.actorOf(CommandSupervisor.props, "CommandSupervisor")
+
 //  val route =
 //    path("bot") {
 //      post {
@@ -54,6 +58,12 @@ object Application extends App {
 
             val user_name = fields.getOrElse("user_name", "")
             val text = fields.getOrElse("text", "")
+
+            text match {
+              case s: String if s == "help" =>
+                commandActor ! Help
+              case _ =>
+            }
 
             incomingWebhook ! Message(text = text)
             s"user_name = $user_name\ntext = $text"
