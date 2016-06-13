@@ -7,7 +7,8 @@ import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import ko.akka.actors.IncomingWebhook
 import ko.akka.actors.IncomingWebhook.Message
-import ko.akka.actors.commands.CommandSupervisor
+import ko.akka.actors.commands.GoogleActor.Search
+import ko.akka.actors.commands.{GoogleActor, CommandSupervisor}
 import ko.akka.actors.commands.CommandSupervisor.Help
 import spray.json.DefaultJsonProtocol
 
@@ -26,7 +27,6 @@ object ServiceJsonProtoocol extends DefaultJsonProtocol {
   implicit val customerProtocol = jsonFormat1(SlackMessage)
 }
 object Application extends App {
-  println("hello world")
   implicit val system = ActorSystem()
 
   implicit val materializer = ActorMaterializer()
@@ -35,6 +35,7 @@ object Application extends App {
   val incomingWebhook = system.actorOf(IncomingWebhook.props(ConfigFactory.load().getConfig("app").getString("incoming-slack-url")))
 
   val commandActor = system.actorOf(CommandSupervisor.props, "CommandSupervisor")
+  val googleActor = system.actorOf(GoogleActor.props, "GoogleActor");
 
 //  val route =
 //    path("bot") {
@@ -59,9 +60,13 @@ object Application extends App {
             val user_name = fields.getOrElse("user_name", "")
             val text = fields.getOrElse("text", "")
 
-            text match {
+            val commands: List[String] = text.split(" ").toList
+
+            commands.head match {
               case s: String if s == "help" =>
                 commandActor ! Help
+              case s: String if s == "search" =>
+                commandActor ! Search(commands.tail.mkString(" "))
               case _ =>
             }
 
