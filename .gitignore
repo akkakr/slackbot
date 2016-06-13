@@ -15,3 +15,5 @@ src_managed/
 .worksheet
 .ensime
 .ensime_cache/
+
+.idea
